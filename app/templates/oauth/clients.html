@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block page_actions %}
+{{ super() }}
+<a href="{{ url_for('oauth.new_client') }}" class="btn btn-default">New Client</a>
+{% endblock page_actions %}
+
+{% block page_content %}
+{{ super() }}
+<table class="table table-hover">
+    <caption>{{ clients|length }} client{{ '' if clients|length == 1 else 's' }} registered.</caption>
+    <thead>
+        <tr>
+            <th>Client</th>
+            <th>Redirect URIs</th>
+            <th>Identity</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for c in clients: %}
+        <tr>
+            <td class="col-md-3">
+                <a href="{{ url_for('oauth.client', cid=c.client_id) }}">
+                    {{ c.name }} ({{ 'Confidential' if c.is_confidential else 'Public' }})
+                </a> <br />
+                {{ c.description }} <br />
+                Scopes: {{ c.default_scopes|join(', ') }}
+            </td>
+            <td class="col-md-3">
+                {{ c.redirect_uris|join(', ') }}
+            </td>
+            <td class="col-md-6">
+                ID: {{ c.client_id }}<br />
+                Secret: {{ c.client_secret }}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock page_content %}

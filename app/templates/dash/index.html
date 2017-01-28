@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+
+{% block page_content %}
+{{ super() }}
+<div class="col-md-6">
+    <div class="panel panel-default">
+        <div class="panel-heading">Recommender System</div>
+        <div class="panel-body">
+            <dl>
+                <dt><a href="{{ url_for('dash.questions') }}">Questions</a></dt>
+                <dd>Manage recommender system questions.</dd>
+                <hr>
+                <dt><a href="{{ url_for('dash.profiles') }}">Profiles</a></dt>
+                <dd>Manage test profiles.</dd>
+            </dl>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-6">
+    <div class="panel panel-default">
+        <div class="panel-heading">API Security</div>
+        <div class="panel-body">
+            <dl>
+                <dt><a href="{{ url_for('oauth.clients') }}">OAuth2 Clients</a></dt>
+                <dd>Manage authorized clients.</dd>
+            </dl>
+        </div>
+    </div>
+</div>
+{% endblock page_content %}

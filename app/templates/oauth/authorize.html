@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block page_content %}
+{{ super() }}
+<form method="post" class="form" role="form">
+    <button class="btn btn-default" name="confirm" value="yes">Confirm</button>
+    <button class="btn btn-default" name="confirm" value="no">Cancel</button>
+</form>
+{% endblock page_content %}

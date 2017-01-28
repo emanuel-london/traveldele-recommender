@@ -1,0 +1,151 @@
+{% extends "bootstrap/base.html" %}
+
+{% block head %}
+{{ super() }}
+{{ JSGlue.include() }}
+{% endblock %}
+
+{% block styles %}
+{{ super() }}
+
+{% assets "app_css" %}
+<link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}" />
+{% endassets %}
+
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+
+{% assets "app_js" %}
+<script type="text/javascript" src="{{ ASSET_URL }}"></script>
+{% endassets %}
+
+{% endblock %}
+
+{% block title  %}{{ title }} | {{ site_name }}{% endblock %}
+
+{% block body_attribs %}
+class="
+{%- block body_class %}
+{{- 'bp-' + endpoint.split('.')[0] }}
+{{- ' ep-' + endpoint.split('.')[1] }}
+{%- if navwell %} navwell{% endif %}
+{%- if jumbotron %} jtron{% endif %}
+{{- sidebar_class }}
+{%- endblock %}"
+{% endblock %}
+
+{% block navbar%}
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle Navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">
+            	<span class="site-name">{{ site_name }}</span>
+            </a>
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="main-nav nav navbar-nav">
+            </ul>
+
+
+            {% if current_user.is_authenticated: %}
+            <div id="user-menu-dropdown" class="navbar-right dropdown">
+	            <ul class="nav navbar-nav">
+	            	<li>
+			            <a id="user-menu-toggle" href="#" class="dropdown-toggle"
+			            		role="button" data-toggle="dropdown"
+			            		aria-haspopup="true" aria-expanded="false">
+			            	{{ current_user.username }}
+			            	<span class="caret"></span>
+			            </a>
+			            <ul class="dropdown-menu"
+			            	aria-labelledby="user-menu-toggle">
+				            <li><a href="{{ url_for('dash.index') }}">Dashboard</a></li>
+				            <li>
+				            	<a href="{{ url_for('auth.logout') }}">
+				            		Sign Out
+				            	</a>
+				            </li>
+			        	</ul>
+		            </li>
+	            </ul>
+        	</div>
+            {% endif %}
+            <ul class="nav navbar-nav navbar-right">
+                {% if not current_user.is_authenticated: %}
+                <li><a href="{{ url_for('auth.login') }}">Sign in</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+{% if navwell: %}
+<div id="navigation-well" class="well">
+	<div class="container">
+		<div id="breadcrumbs-container" class="pull-left">
+			{% for crumb in breadcrumbs: %}
+			<a href="{{ crumb.url }}">{{ crumb.text }}</a>
+			{{ '/' if not loop.last }}
+			{% endfor %}
+		</div>
+		<div id="actions-container" class="pull-right">
+			{% block page_actions %}{% endblock %}
+		</div>
+	</div>
+</div>
+{% endif %}
+
+<div class="container">
+    {% for category, message in get_flashed_messages(with_categories=true) %}
+    <div class="alert alert-{{ category }}">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    {{ message }}
+    </div>
+    {% endfor %}
+
+	<h2 id="page_header">{{ page_header }}</h2>
+
+    {% if sidebar_left: %}
+    <aside id="sidebar-left">
+    	{% block sidebar_left %}{% endblock %}
+    </aside>
+    {% endif %}
+
+
+    <div id="page-content">
+	    {% block page_content %}{% endblock %}
+    </div>
+
+
+    {% if sidebar_right: %}
+    <aside id="sidebar-right">
+    	{% block sidebar_right %}{% endblock %}
+    </aside>
+    {% endif %}
+</div>
+
+{% block footer %}
+<footer class="page-footer">
+    <div class="container">
+    	<div class="col-md-12">
+    	</div>
+    	<div class="col-md-12">
+    		<div class="col-md-6">
+    			<p class="copyright-blurb">&copy; {{ date.year }} {{ org_name }}. All rights reserved.</p>
+    		</div>
+    		<div class="col-md-6"></div>
+    	</div>
+    </div>
+</footer>
+{% endblock %}
+{% endblock %}

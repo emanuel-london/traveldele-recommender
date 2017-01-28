@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+
+{% block page_actions %}
+{{ super() }}
+<a href="{{ url_for('oauth.purge_client_grants', cid=cid) }}" class="btn btn-danger">Purge Grants</a>
+<a href="{{ url_for('oauth.purge_client_tokens', cid=cid) }}" class="btn btn-danger">Purge Tokens</a>
+<a href="{{ url_for('oauth.reset_client_secret', cid=cid) }}" class="btn btn-danger">Reset Secret</a>
+<a href="{{ url_for('oauth.delete_client', cid=cid) }}" class="btn btn-danger">Delete</a>
+{% endblock page_actions %}
+
+
+{% block page_content %}
+{{ super() }}
+<div class="col-md-6">
+    <form method="post" class="form" role="form">
+        {{ form.hidden_tag() }}
+        <div class="form-group
+                        {% if form.name.errors %} has-error{% endif %}
+                        {% if form.name.flags.required %} required{% endif %}">
+            {{ form.name.label(class_='control-label') }}
+            {{ form.name(class_='form-control') }}
+            {% for message in form.name.errors %}
+            <p class="help-block">{{ message }}</p>
+            {% endfor %}
+        </div>
+        <div class="form-group
+                        {% if form.description.errors %} has-error{% endif %}
+                        {% if form.description.flags.required %} required{% endif %}">
+            {{ form.description.label(class_='control-label') }}
+            {{ form.description(class_='form-control', rows=5) }}
+            {% for message in form.description.errors %}
+            <p class="help-block">{{ message }}</p>
+            {% endfor %}
+        </div>
+        <div class="form-group
+                        {% if form.redirect.errors %} has-error{% endif %}
+                        {% if form.redirect.flags.required %} required{% endif %}">
+            {{ form.redirect.label(class_='control-label') }}
+            {{ form.redirect(class_='form-control', rows=5) }}
+            {% for message in form.redirect.errors %}
+            <p class="help-block">{{ message }}</p>
+            {% endfor %}
+        </div>
+        <div class="form-group
+                        {% if form.scopes.errors %} has-error{% endif %}
+                        {% if form.scopes.flags.required %} required{% endif %}">
+            {{ form.scopes.label(class_='control-label') }}
+            {{ form.scopes(class_='form-control', rows=5) }}
+            {% for message in form.scopes.errors %}
+            <p class="help-block">{{ message }}</p>
+            {% endfor %}
+        </div>
+        <div class="checkbox">
+            <label>
+                {{ form.confidential }}
+                {{ form.confidential.label.text }}
+            </label>
+        </div>
+        
+        <a role="button" class="btn btn-default"
+                href="{{ url_for('oauth.client', cid=cid)}}">
+                Cancel
+        </a>
+        {{ form.submit(class_='btn btn-default') }}
+    </form>
+</div>
+{% endblock page_content %}

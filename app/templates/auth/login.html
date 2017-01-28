@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block page_content %}
+<h4>Sign in</h4>
+<form action="{{ login_action }}" method="post" class="form" role="form">
+    {{ login_form.hidden_tag() }}
+    <div class="form-group{% if login_form.username.errors %} has-error{% endif %}">
+        {{ login_form.username.label(class_='control-label') }}
+        {{ login_form.username(class_='form-control') }}
+        {% for message in login_form.username.errors %}
+        <p class="help-block">{{ message }}</p>
+        {% endfor %}
+    </div>
+    <div class="form-group{% if login_form.password.errors %} has-error{% endif %}">
+        {{ login_form.password.label(class_='control-label') }}
+        {{ login_form.password(class_='form-control') }}
+        {% for message in login_form.username.errors %}
+        <p class="help-block">{{ message }}</p>
+        {% endfor %}
+    </div>
+    <div class="checkbox">
+        <label>
+            {{ login_form.remember_me }}
+            Keep me logged in
+        </label>
+    </div>
+    {{ login_form.submit(class_='btn btn-default') }}
+    <p><br />
+        <a href="{{ url_for('auth.password') }}">Forgot your password?</a>
+    </p>
+</form>
+{% endblock page_content %}

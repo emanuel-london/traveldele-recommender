@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block page_actions %}
+{{ super() }}
+<a href="{{ url_for('dash.new_profile') }}" class="btn btn-default">New Profile</a>
+{% endblock page_actions %}
+
+
+{% block page_content %}
+{{ super() }}
+<table class="table table-hover">
+    <caption>{{ profiles|length }} profile{{ '' if profiles|length == 1 else 's' }} in database.</caption>
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for p in profiles: %}
+        <tr>
+            <td class="col-md-2">{{ p.id }}</td>
+            <td class="col-md-10"><a href="{{ url_for('dash.profile', pid=p.id) }}">{{ p.name }}</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock page_content %}

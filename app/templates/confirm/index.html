@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+
+{% block page_content %}
+{{ super() }}
+<form method="post" class="form" role="form">
+    {{ form.hidden_tag() }}
+    <div class="checkbox">
+        <label>
+            {{ form.confirmed }}
+            {{ form.confirmed.label.text }}
+        </label>
+    </div>
+        
+        <a role="button" class="btn btn-default"
+                href="{{ cancel_path }}">
+                Cancel
+        </a>
+    {{ form.submit(class_='btn btn-default') }}
+</form>
+{% endblock page_content %}
