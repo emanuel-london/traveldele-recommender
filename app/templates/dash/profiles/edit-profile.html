@@ -3,12 +3,20 @@
 
 {% block page_actions %}
 {{ super() }}
-<a href="{{ url_for('dash.delete_profile', pid=pid) }}" class="btn btn-danger">Delete</a>
+
+{% if profile.pushed: %}
+<a href="{{ url_for('dash.pull_profile', pid=profile.id) }}" class="btn btn-danger">Pull from RS</a>
+{% else: %}
+<a href="{{ url_for('dash.push_profile', pid=profile.id) }}" class="btn btn-danger">Push to RS</a>
+{% endif %}
+
+<a href="{{ url_for('dash.delete_profile', pid=profile.id) }}" class="btn btn-danger">Delete</a>
 {% endblock page_actions %}
 
 
 {% block page_content %}
 {{ super() }}
+
 <div class="col-md-6">
     <form method="post" class="form" role="form">
         {{ form.hidden_tag() }}
