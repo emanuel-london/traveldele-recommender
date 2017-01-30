@@ -112,6 +112,9 @@ def create_app(config_name):
     )
     assets.register('app_css', app_css)
 
+    if app.config['DEBUG']:
+        os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = 'true'
+
     @app.after_request
     def call_after_request_callbacks(response):
         for callback in getattr(g, 'after_request_callbacks', ()):
