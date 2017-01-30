@@ -189,6 +189,7 @@ class Profile(sql.Model):
     id = sql.Column(sql.Integer, primary_key=True)
     name = sql.Column(sql.String(32), index=True)
     pushed = sql.Column(sql.Boolean, default=False)
+    rs_id = sql.Column(sql.String(24), nullable=True)
 
 
 class OAuth2Client(sql.Model):
