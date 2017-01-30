@@ -18,6 +18,17 @@ from app.api_v1_0 import api_v1_0
 from app.api_v1_0.schemata import schemata
 
 
+@api_v1_0.route('/', methods=['GET'])
+def index():
+    """Dummy endpoint. 
+    Makes it easy to get base url in other parts of the app.
+    """
+    return jsonify({
+        'status': HTTPStatus.OK,
+        'message': 'API version 1.0'
+    }), HTTPStatus.OK
+
+
 @api_v1_0.route('/question', methods=['GET'])
 @op.require_oauth('api')
 def questions():
