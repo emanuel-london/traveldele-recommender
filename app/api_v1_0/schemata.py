@@ -6,14 +6,20 @@ class Schemata(object):
         'type': 'object',
         'properties': {
             'external_id': {'type': 'string'},
-            'name': {'type': 'string'}
         }
     }
 
     put_profile = {
         'type': 'object',
+        'properties': {}
+    }
+
+    post_answer = {
+        'type': 'object',
         'properties': {
-            'name': {'type': 'string', 'required': False}
+            'profile': {'type': 'string'},
+            'question': {'type': 'string'},
+            'answer': {'type': 'string'}
         }
     }
 

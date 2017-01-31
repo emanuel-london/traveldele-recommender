@@ -2,7 +2,7 @@
 
 
 from http import HTTPStatus
-
+import random
 
 from bson.objectid import ObjectId
 from bson.errors import InvalidId
@@ -38,6 +38,86 @@ def questions():
     for q in question.find():
         output.append({'_id': str(q['_id']), 'question': q['question']})
 
+    return jsonify({
+        'status': HTTPStatus.OK,
+        'result': output
+    }), HTTPStatus.OK
+
+
+@api_v1_0.route('/question/unanswered/<string:_id>', methods=['GET'])
+@op.require_oauth('api')
+def get_unanswered_question(_id):
+    """Randomly select an unanswered question and return it."""
+    try:
+        answer = mongo.db.answers
+        answered = [a['question']
+                    for a in answer.find({'profile': ObjectId(_id)})]
+
+        question = mongo.db.questions
+        unanswered = question.find({'_id': {'$nin': answered}})
+
+        if unanswered is None:
+            # No unanswered questions found.
+            return jsonify({
+                'status': HTTPStatus.NOT_FOUND,
+                'message': '{0}.'.format(HTTPStatus.NOT_FOUND.description)
+            }), HTTPStatus.NOT_FOUND
+
+        # Select one questions at random.
+        ret = random.choice(list(unanswered))
+
+        output = {
+            '_id': str(ret['_id']),
+            'question': ret['question'],
+            'options': ret['options']
+        }
+
+        return jsonify({
+            'status': HTTPStatus.OK,
+            'result': output
+        }), HTTPStatus.OK
+
+    except InvalidId:
+        # Invalid _id format.
+        return jsonify({
+            'status': HTTPStatus.BAD_REQUEST,
+            'message': '{0}. Invalid _id format.'.format(HTTPStatus.BAD_REQUEST.description)
+        }), HTTPStatus.BAD_REQUEST
+
+
+@api_v1_0.route('/answer', methods=['POST'])
+@op.require_oauth('api')
+def post_answer():
+    """Save an answer associated with a specific profile and question."""
+    answer = mongo.db.answers
+
+    # Get request data.
+    data = request.get_json()
+    if data is None:
+        return jsonify({
+            'status': HTTPStatus.BAD_REQUEST,
+            'message': '{0}. Only JSON data allowed.'.format(HTTPStatus.BAD_REQUEST.description)
+        }), HTTPStatus.BAD_REQUEST
+
+    # Validate data against the appropriate schema.
+    try:
+        validictory.validate(data, schemata.post_answer)
+    except Exception:
+        # Invalid data.
+        return jsonify({
+            'status': HTTPStatus.BAD_REQUEST,
+            'message': '{0}. Invalid data schema.'.format(HTTPStatus.BAD_REQUEST.description)
+        }), HTTPStatus.BAD_REQUEST
+
+    # Insert answer.
+    result = answer.insert_one({
+        'profile': ObjectId(data['profile']),
+        'question': ObjectId(data['question']),
+        'answer': data['answer']
+    })
+    output = {
+        'inserted_id': str(result.inserted_id)
+    }
     return jsonify({
         'status': HTTPStatus.OK,
         'result': output

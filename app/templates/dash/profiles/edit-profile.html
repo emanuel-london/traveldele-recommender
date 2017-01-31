@@ -16,8 +16,7 @@
 
 {% block page_content %}
 {{ super() }}
-
-<div class="col-md-6">
+<div class="col-md-{{ 12 if profile.pushed else 6 }}">
     <form method="post" class="form" role="form">
         {{ form.hidden_tag() }}
         <div class="form-group
@@ -38,3 +37,22 @@
     </form>
 </div>
 {% endblock page_content %}
+
+{% block sidebar_right %}
+<div class="panel panel-default">
+    <div class="panel-heading">Unanswered Question</div>
+    <div id="k-ua-container" class="panel-body">
+        
+    </div>
+</div>
+{% endblock sidebar_right %}
+
+{% block scripts_inner %}
+<script type="text/javascript">
+FlaskData.pid = "{{ profile.rs_id }}";
+FlaskData.pushed = "{{ profile.pushed }}";
+</script>
+{% assets "krs_js" %}
+<script type="text/javascript" src="{{ ASSET_URL }}"></script>
+{% endassets %}
+{% endblock scripts_inner %}

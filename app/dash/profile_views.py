@@ -84,6 +84,8 @@ def profile(pid):
 
     page_vars = {
         'title': 'Edit Profile',
+        'sidebar_class': ' sidebar two-column' if profile.pushed else '',
+        'sidebar_right': profile.pushed,
         'navwell': True,
         'page_header': 'Edit Profile',
         'form': form,
@@ -151,7 +153,14 @@ def pull_profile(pid):
     profile = mongo.db.profiles
     p = Profile.query.filter_by(id=pid).first()
 
+    # Delete profile.
     profile.delete_one({'_id': ObjectId(p.rs_id)})
+
+    # Delete answers.
+    answer = mongo.db.answers
+    answers = [a['_id']
+               for a in answer.find({'profile': ObjectId(p.rs_id)})]
+    answer.delete_many({'_id': {'$in': answers}})
 
     # Clear pushed flag on profile.
     p.rs_id = None

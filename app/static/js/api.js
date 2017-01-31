@@ -1,0 +1,42 @@
+var KAPI = (function (self, $) {
+	
+	// API endpoints.
+	self.endpoints = {};
+	
+	// Initialize private properties.
+	self.init = function(params) {
+		self.endpoints = params.endpoints;
+		
+		return self;
+	};
+	
+	// Get an unanswered question.
+	self.getUnansweredQuestion = function(token) {
+		return $.ajax({
+			url: self.endpoints.get_unanswered_question,
+			method: "GET",
+			headers: {
+				"Authorization": "{0} {1}".format(
+						token.token_type, token.access_token)
+			},
+			dataType: "json"
+		});
+	};
+	
+	// Post an answer to the recommender system.
+	self.postAnswer = function(token, data) {
+		return $.ajax({
+			url: self.endpoints.post_answer,
+			method: "POST",
+			headers: {
+				"Authorization": "{0} {1}".format(
+						token.token_type, token.access_token),
+				"Content-Type": "application/json"
+			},
+			data: JSON.stringify(data),
+			dataType: "json"			
+		});
+	};
+	
+	return self;
+}(KAPI || {}, jQuery));
