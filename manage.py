@@ -41,5 +41,4 @@ def test():
 
 
 if __name__ == '__main__':
-    os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = 'true'
     manager.run()

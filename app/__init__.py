@@ -99,11 +99,19 @@ def create_app(config_name):
 
     # Register assets
     app_js = Bundle(
+        'js/utils.js',
         'js/script.js',
         filters='closure_js',
         output='gen/packed.js'
     )
     assets.register('app_js', app_js)
+
+    krs_js = Bundle(
+        'js/oauth.js',
+        'js/api.js',
+        output='gen/krs.js'
+    )
+    assets.register('krs_js', krs_js)
 
     app_css = Bundle(
         'scss/style.scss',
@@ -111,6 +119,9 @@ def create_app(config_name):
         output='gen/packed.css'
     )
     assets.register('app_css', app_css)
+
+    if app.config['DEBUG']:
+        os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = 'true'
 
     @app.after_request
     def call_after_request_callbacks(response):
