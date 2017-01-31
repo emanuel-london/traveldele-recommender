@@ -16,11 +16,11 @@
 
 {% block scripts %}
 {{ super() }}
-
+<script type="text/javascript">var FlaskData = {};</script>
+{% block scripts_inner %}{% endblock scripts_inner %}
 {% assets "app_js" %}
 <script type="text/javascript" src="{{ ASSET_URL }}"></script>
 {% endassets %}
-
 {% endblock %}
 
 {% block title  %}{{ title }} | {{ site_name }}{% endblock %}
