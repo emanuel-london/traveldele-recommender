@@ -71,13 +71,17 @@ Berksfile.lock
 # Flask-Assets
 app/static/.webassets-cache/*
 !app/static/.webassets-cache/.gitkeep
-packed.css
-packed.js
-vis.js
+app/static/gen/*.js
+app/static/gen/*.css
+!app/static/gen/.gitkeep
 
 app/static/fonts
 app/static/vendor/*
-!app/static/vendor/.gitkeep
+app/static/bower_components/*
 
 #Files
 app/files/*
+
+# Never ignore .gitkeep files.
+!.gitkeep
+
