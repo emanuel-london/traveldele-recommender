@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+
+{% block page_content %}
+{{ super() }}
+<div class="col-md-6">
+    <form method="post" class="form" role="form">
+        {{ form.hidden_tag() }}
+        <div class="form-group
+                        {% if form.statement.errors %} has-error{% endif %}
+                        {% if form.statement.flags.required %} required{% endif %}">
+            {{ form.statement.label(class_='control-label') }}
+            {{ form.statement(class_='form-control', rows=5) }}
+            {% for message in form.statement.errors %}
+            <p class="help-block">{{ message }}</p>
+            {% endfor %}
+        </div>
+        
+        <a role="button" class="btn btn-default"
+                href="{{ url_for('dash.statements')}}">
+                Cancel
+        </a>
+        {{ form.submit(class_='btn btn-default') }}
+    </form>
+</div>
+{% endblock page_content %}

@@ -14,12 +14,12 @@ class Schemata(object):
         'properties': {}
     }
 
-    post_answer = {
+    post_reaction = {
         'type': 'object',
         'properties': {
             'profile': {'type': 'string'},
-            'question': {'type': 'string'},
-            'answer': {'type': 'string'}
+            'statement': {'type': 'string'},
+            'reaction': {'type': 'string'}
         }
     }
 

@@ -10,10 +10,10 @@ var KAPI = (function (self, $) {
 		return self;
 	};
 	
-	// Get an unanswered question.
-	self.getUnansweredQuestion = function(token) {
+	// Get a question that has no reaction.
+	self.getInactionStatement = function(token) {
 		return $.ajax({
-			url: self.endpoints.get_unanswered_question,
+			url: self.endpoints.get_inaction_statement,
 			method: "GET",
 			headers: {
 				"Authorization": "{0} {1}".format(
@@ -23,10 +23,10 @@ var KAPI = (function (self, $) {
 		});
 	};
 	
-	// Post an answer to the recommender system.
-	self.postAnswer = function(token, data) {
+	// Post a reaction to the recommender system.
+	self.postReaction = function(token, data) {
 		return $.ajax({
-			url: self.endpoints.post_answer,
+			url: self.endpoints.post_reaction,
 			method: "POST",
 			headers: {
 				"Authorization": "{0} {1}".format(

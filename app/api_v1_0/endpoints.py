@@ -29,14 +29,14 @@ def index():
     }), HTTPStatus.OK
 
 
-@api_v1_0.route('/question', methods=['GET'])
+@api_v1_0.route('/statement', methods=['GET'])
 @op.require_oauth('api')
-def questions():
-    """Retrieve all questions from the recommender system."""
-    question = mongo.db.questions
+def statements():
+    """Retrieve all statements from the recommender system."""
+    statement = mongo.db.statements
     output = []
-    for q in question.find():
-        output.append({'_id': str(q['_id']), 'question': q['question']})
+    for s in statement.find():
+        output.append({'_id': str(s['_id']), 'statement': s['statement']})
 
     return jsonify({
         'status': HTTPStatus.OK,
@@ -44,32 +44,31 @@ def questions():
     }), HTTPStatus.OK
 
 
-@api_v1_0.route('/question/unanswered/<string:_id>', methods=['GET'])
+@api_v1_0.route('/statement/inaction/<string:_id>', methods=['GET'])
 @op.require_oauth('api')
-def get_unanswered_question(_id):
-    """Randomly select an unanswered question and return it."""
+def get_inaction_statement(_id):
+    """Randomly select a statement with no reaction and return it."""
     try:
-        answer = mongo.db.answers
-        answered = [a['question']
-                    for a in answer.find({'profile': ObjectId(_id)})]
+        reaction = mongo.db.reactions
+        reacted = [a['statement']
+                   for a in reaction.find({'profile': ObjectId(_id)})]
 
-        question = mongo.db.questions
-        unanswered = question.find({'_id': {'$nin': answered}})
+        statement = mongo.db.statements
+        inaction = statement.find({'_id': {'$nin': reacted}})
 
-        if unanswered is None:
-            # No unanswered questions found.
+        if inaction is None:
+            # No inaction statements found.
             return jsonify({
                 'status': HTTPStatus.NOT_FOUND,
                 'message': '{0}.'.format(HTTPStatus.NOT_FOUND.description)
             }), HTTPStatus.NOT_FOUND
 
-        # Select one questions at random.
-        ret = random.choice(list(unanswered))
+        # Select one statement at random.
+        ret = random.choice(list(inaction))
 
         output = {
             '_id': str(ret['_id']),
-            'question': ret['question'],
-            'options': ret['options']
+            'statement': ret['statement']
         }
 
         return jsonify({
@@ -85,11 +84,11 @@ def get_unanswered_question(_id):
         }), HTTPStatus.BAD_REQUEST
 
 
-@api_v1_0.route('/answer', methods=['POST'])
+@api_v1_0.route('/reaction', methods=['POST'])
 @op.require_oauth('api')
-def post_answer():
-    """Save an answer associated with a specific profile and question."""
-    answer = mongo.db.answers
+def post_reaction():
+    """Save a reaction associated with a specific profile and statement."""
+    reaction = mongo.db.reactions
 
     # Get request data.
     data = request.get_json()
@@ -101,7 +100,7 @@ def post_answer():
 
     # Validate data against the appropriate schema.
     try:
-        validictory.validate(data, schemata.post_answer)
+        validictory.validate(data, schemata.post_reaction)
     except Exception:
         # Invalid data.
         return jsonify({
@@ -109,11 +108,11 @@ def post_answer():
             'message': '{0}. Invalid data schema.'.format(HTTPStatus.BAD_REQUEST.description)
         }), HTTPStatus.BAD_REQUEST
 
-    # Insert answer.
-    result = answer.insert_one({
+    # Insert reaction.
+    result = reaction.insert_one({
         'profile': ObjectId(data['profile']),
-        'question': ObjectId(data['question']),
-        'answer': data['answer']
+        'statement': ObjectId(data['statement']),
+        'reaction': data['reaction']
     })
     output = {
         'inserted_id': str(result.inserted_id)
