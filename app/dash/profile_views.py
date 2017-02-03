@@ -156,11 +156,11 @@ def pull_profile(pid):
     # Delete profile.
     profile.delete_one({'_id': ObjectId(p.rs_id)})
 
-    # Delete answers.
-    answer = mongo.db.answers
-    answers = [a['_id']
-               for a in answer.find({'profile': ObjectId(p.rs_id)})]
-    answer.delete_many({'_id': {'$in': answers}})
+    # Delete reactions.
+    reaction = mongo.db.reactions
+    reactions = [r['_id']
+                 for r in reaction.find({'profile': ObjectId(p.rs_id)})]
+    reaction.delete_many({'_id': {'$in': reactions}})
 
     # Clear pushed flag on profile.
     p.rs_id = None

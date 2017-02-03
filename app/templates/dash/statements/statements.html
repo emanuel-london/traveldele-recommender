@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block page_actions %}
+{{ super() }}
+<a href="{{ url_for('dash.new_statement') }}" class="btn btn-default">New Statement</a>
+
+{% if statements|length > 0 %}
+<a href="{{ url_for('dash.purge_statements') }}" class="btn btn-danger">Purge Statements</a>
+{% else: %}
+<a href="{{ url_for('dash.import_statements') }}" class="btn btn-success">Import Statements</a>
+{% endif %}
+{% endblock page_actions %}
+
+
+{% block page_content %}
+{{ super() }}
+<table class="table table-hover">
+    <caption>{{ statements|length }} statement{{ '' if statements|length == 1 else 's' }} in document store.</caption>
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Statement</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for s in statements: %}
+        <tr>
+            <td class="col-md-2">{{ s._id }}</td>
+            <td class="col-md-10"><a href="{{ url_for('dash.statement', sid=s._id) }}">{{ s.statement }}</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock page_content %}
