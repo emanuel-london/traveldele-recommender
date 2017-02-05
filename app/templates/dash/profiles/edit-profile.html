@@ -42,16 +42,35 @@
 <div class="panel panel-default">
     <div class="panel-heading">Profiling Statement</div>
     <div id="k-ua-container" class="panel-body">
-        
+        <p id="k-ua-statement"></p>
+        <div id="k-ua-slider"></div>
+        <div id="k-ua-buttons">
+            <input type="button" class="answer btn btn-default" value="submit">
+            <input type="button" class="skip btn btn-default" value="skip">
+        </div>
     </div>
 </div>
 {% endblock sidebar_right %}
+
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bower_components/jquery-ui/themes/smoothness/jquery-ui.min.css') }}" />
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bower_components/jquery-ui/themes/smoothness/theme.css') }}" />
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bower_components/jQuery-ui-Slider-Pips/dist/jquery-ui-slider-pips.min.css') }}" />
+{% endblock styles%}
 
 {% block scripts_inner %}
 <script type="text/javascript">
 FlaskData.pid = "{{ profile.rs_id }}";
 FlaskData.pushed = "{{ profile.pushed }}";
 </script>
+
+{% assets "jui_js" %}
+<script type="text/javascript" src="{{ ASSET_URL }}"></script>
+{% endassets %}
+
+<script type="text/javascript" src="{{ url_for('static', filename='bower_components/jQuery-ui-Slider-Pips/dist/jquery-ui-slider-pips.min.js') }}"></script>
+
 {% assets "krs_js" %}
 <script type="text/javascript" src="{{ ASSET_URL }}"></script>
 {% endassets %}

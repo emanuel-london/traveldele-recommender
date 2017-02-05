@@ -1,103 +1,153 @@
 {
 	"statements": [{
-		"statement": "Do you think the holcaust has been exaggerated"
+		"statement": "I think the holcaust has been exaggerated",
+		"category": "General"
 	}, {
-		"statement": "Are you a feminist"
+		"statement": "I am a feminist",
+		"category": "General"
 	}, {
-		"statement": "Would you mind if your children were gay/lesbian"
+		"statement": "I would mind if my children were gay/lesbian",
+		"category": "General"
 	}, {
-		"statement": "Do you hate feminists"
+		"statement": "I hate feminists",
+		"category": "General"
 	}, {
-		"statement": "Do you believe in evolution"
+		"statement": "I believe in evolution",
+		"category": "General"
 	}, {
-		"statement": "Do you think the government assassinates its own citizens"
+		"statement": "I think the government assassinates its own citizens",
+		"category": "General"
 	}, {
-		"statement": "Do you respect copyright laws"
+		"statement": "I respect copyright laws",
+		"category": "General"
 	}, {
-		"statement": "Are there important biological brain differences between men and women"
+		"statement": "There are important biological brain differences between men and women",
+		"category": "General"
 	}, {
-		"statement": "Do you like watching sports"
+		"statement": "I like watching sports",
+		"category": "General"
 	}, {
-		"statement": "Do aliens exist"
+		"statement": "I think aliens exist",
+		"category": "General"
 	}, {
-		"statement": "Did you start drinking alcohol at a young age"
+		"statement": "I started drinking alcohol at a young age",
+		"category": "General"
 	}, {
-		"statement": "Do you support drinking age laws"
+		"statement": "I support drinking age laws",
+		"category": "General"
 	}, {
-		"statement": "Are you interested in psychedelic drugs"
+		"statement": "I am interested in psychedelic drugs",
+		"category": "General"
 	}, {
-		"statement": "Do you binge on tv shows"
+		"statement": "I binge on tv shows",
+		"category": "General"
 	}, {
-		"statement": "Game of Thrones"
+		"statement": "Game of Thrones",
+		"category": "General"
 	}, {
-		"statement": "Do you think spanking children is reasonable"
+		"statement": "I think spanking children is reasonable",
+		"category": "General"
 	}, {
-		"statement": "Are you ok with sexual jokes"
+		"statement": "I am ok with sexual jokes",
+		"category": "General"
 	}, {
-		"statement": "Should guns be illegal across the board"
+		"statement": "Guns should be illegal across the board",
+		"category": "General"
 	}, {
-		"statement": "Is PTSD real"
+		"statement": "PTSD is real",
+		"category": "General"
 	}, {
-		"statement": "Should all drugs be legalized"
+		"statement": "All drugs should be legalized",
+		"category": "General"
 	}, {
-		"statement": "Should Marijuana be legalized"
+		"statement": "Marijuana should be legalized",
+		"category": "General"
 	}, {
-		"statement": "Would you use conterfeit money if you could get away with it"
+		"statement": "I would use conterfeit money if I could get away with it",
+		"category": "General"
 	}, {
-		"statement": "Do you laugh at jokes that other people find offensive"
+		"statement": "I laugh at jokes that other people find offensive",
+		"category": "General"
 	}, {
-		"statement": "Have you set fuel or chemicals on fire for fun"
+		"statement": "I have set fuel or chemicals on fire for fun",
+		"category": "General"
 	}, {
-		"statement": "Do you like the idea of genetically engineered foods"
+		"statement": "I like the idea of genetically engineered foods",
+		"category": "General"
 	}, {
-		"statement": "Are you vegan"
+		"statement": "I am vegan",
+		"category": "General"
 	}, {
-		"statement": "Are you vegetarian"
+		"statement": "I am vegetarian",
+		"category": "General"
 	}, {
-		"statement": "Is vegetarianism stupid"
+		"statement": "Vegetarianism is stupid",
+		"category": "General"
 	}, {
-		"statement": "Should college fraternities be banned"
+		"statement": "College fraternities should be banned",
+		"category": "General"
 	}, {
-		"statement": "Are you frequently overcome with giggles"
+		"statement": "I am frequently overcome with giggles",
+		"category": "General"
 	}, {
-		"statement": "Are hoping mankind makes contact with aliens in your lifetime"
+		"statement": "I am hoping mankind makes contact with aliens in my lifetime",
+		"category": "General"
 	}, {
-		"statement": "Should we be tough on crime"
+		"statement": "We be tough on crime",
+		"category": "General"
 	}, {
-		"statement": "Do you like to explore old mines"
+		"statement": "I like to explore old mines",
+		"category": "General"
 	}, {
-		"statement": "Do you support the death penalty"
+		"statement": "I support the death penalty",
+		"category": "General"
 	}, {
-		"statement": "Do you think \"that's what she said'\" jokes are funny"
+		"statement": "I think \"that's what she said'\" jokes are funny",
+		"category": "General"
 	}, {
-		"statement": "Have you smoked a lot of marijuana in your life"
+		"statement": "I have smoked a lot of marijuana in my life",
+		"category": "General"
 	}, {
-		"statement": "Are there some things science can't explain"
+		"statement": "There are some things science can't explain",
+		"category": "General"
 	}, {
-		"statement": "Are you a fan of pranks"
+		"statement": "I am a fan of pranks",
+		"category": "General"
 	}, {
-		"statement": "Do you joke around a lot"
+		"statement": "I joke around a lot",
+		"category": "General"
 	}, {
-		"statement": "Would you associate with criminals"
+		"statement": "I would associate with criminals",
+		"category": "General"
 	}, {
-		"statement": "Are you disgusted by obesity"
+		"statement": "I am disgusted by obesity",
+		"category": "General"
 	}, {
-		"statement": "Is archery a cool hobby"
+		"statement": "Archery a cool hobby",
+		"category": "General"
 	}, {
-		"statement": "Do you make jokes that often offend some people"
+		"statement": "I make jokes that often offend some people",
+		"category": "General"
 	}, {
-		"statement": "Do you love flowers"
+		"statement": "I love flowers",
+		"category": "General"
 	}, {
-		"statement": "Do you like tatoos"
+		"statement": "I like tatoos",
+		"category": "General"
 	}, {
-		"statement": "Is intelligence genetic"
+		"statement": "Intelligence is genetic",
+		"category": "General"
 	}, {
-		"statement": "Do you like libertarians"
+		"statement": "I like libertarians",
+		"category": "General"
 	}, {
-		"statement": "Do you worry about technology robbing us of our humanity"
+		"statement": "I worry about technology robbing us of our humanity",
+		"category": "General"
 	}, {
-		"statement": "Do you wish magic were real"
+		"statement": "I wish magic were real",
+		"category": "General"
 	}, {
-		"statement": "Do you support conservative politicians"
+		"statement": "I support conservative politicians",
+		"category": "General"
 	}]
 }

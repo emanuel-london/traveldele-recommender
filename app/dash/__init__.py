@@ -12,6 +12,7 @@ dash = Blueprint('dash', __name__)
 
 from . import (
     forms, views,
-    statement_forms, statement_views,
+    category_forms, category_views,
     profile_forms, profile_views,
+    statement_forms, statement_views,
 )

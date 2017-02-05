@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block page_actions %}
+{{ super() }}
+<a href="{{ url_for('dash.new_category') }}" class="btn btn-default">New Category</a>
+
+{% if categories|length > 0 %}
+<a href="{{ url_for('dash.purge_categories') }}" class="btn btn-danger">Purge Categories</a>
+{% else: %}
+<a href="{{ url_for('dash.import_categories') }}" class="btn btn-success">Import Categories</a>
+{% endif %}
+{% endblock page_actions %}
+
+
+{% block page_content %}
+{{ super() }}
+<form method="post" class="form" role="form">
+    <table class="table table-hover">
+        <caption>{{ categories|length }} categor{{ 'y' if categories|length == 1 else 'ies' }} in document store.</caption>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Category</th>
+                <th>Weight</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in categories: %}
+            <tr>
+                <td class="col-md-2">{{ c._id }}</td>
+                <td class="col-md-5"><a href="{{ url_for('dash.category', cid=c._id) }}">{{ c.category }}</a></td>
+                <td class="col-md-5"><input class="form-control" type="number" step="0.01" name="{{ c._id }}" value="{{ c.weight }}" /></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <input class="btn btn-success" type="submit" value="Save weights" />
+</form>
+{% endblock page_content %}
