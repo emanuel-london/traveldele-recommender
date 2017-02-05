@@ -3,7 +3,7 @@
 
 from flask_wtf import FlaskForm
 from wtforms import (
-    TextAreaField, SubmitField,
+    SelectField, SubmitField, TextAreaField,
 )
 from wtforms.validators import Required
 
@@ -11,6 +11,7 @@ from wtforms.validators import Required
 class StatementFormMixin():
     """Base form for statement management forms."""
     statement = TextAreaField('Statement', validators=[Required()])
+    category = SelectField('Category')
 
 
 class NewStatementForm(FlaskForm, StatementFormMixin):

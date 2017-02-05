@@ -113,12 +113,25 @@ def create_app(config_name):
     )
     assets.register('krs_js', krs_js)
 
+    jui_js = Bundle(
+        'bower_components/jquery-ui/jquery-ui.min.js',
+        output='gen/jui.js'
+    )
+    assets.register('jui_js', jui_js)
+
     app_css = Bundle(
         'scss/style.scss',
         filters='pyscss,yui_css',
         output='gen/packed.css'
     )
     assets.register('app_css', app_css)
+
+    jui_css = Bundle(
+        'bower_components/jquery-ui/themes/smoothness/jquery-ui.min.css',
+        'bower_components/jquery-ui/themes/smoothness/theme.css',
+        output='gen/jui.css'
+    )
+    assets.register('jui_css', jui_css)
 
     if app.config['DEBUG']:
         os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = 'true'

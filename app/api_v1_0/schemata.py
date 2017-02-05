@@ -19,7 +19,7 @@ class Schemata(object):
         'properties': {
             'profile': {'type': 'string'},
             'statement': {'type': 'string'},
-            'reaction': {'type': 'string'}
+            'reaction': {'type': 'integer'}
         }
     }
 

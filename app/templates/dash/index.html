@@ -8,9 +8,12 @@
         <div class="panel-heading">Recommender System</div>
         <div class="panel-body">
             <dl>
+                <dt><a href="{{ url_for('dash.categories') }}">Categories</a></dt>
+                <dd>Manage profiling statement categories.</dd>
+                <hr />
                 <dt><a href="{{ url_for('dash.statements') }}">Statements</a></dt>
-                <dd>Manage recommender system profiling statements.</dd>
-                <hr>
+                <dd>Manage profiling statements.</dd>
+                <hr />
                 <dt><a href="{{ url_for('dash.profiles') }}">Profiles</a></dt>
                 <dd>Manage test profiles.</dd>
             </dl>

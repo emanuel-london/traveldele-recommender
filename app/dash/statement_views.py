@@ -29,13 +29,23 @@ def statements():
     statement = mongo.db.statements
     statements = []
     for s in statement.find():
-        statements.append({'_id': str(s['_id']), 'statement': s['statement']})
+        statements.append({
+            '_id': str(s['_id']),
+            'statement': s['statement'],
+            'category': str(s['category'])
+        })
+
+    category = mongo.db.categories
+    categories = {}
+    for c in category.find():
+        categories[str(c['_id'])] = c['category']
 
     page_vars = {
         'title': 'Recommender System Statements',
         'navwell': True,
         'page_header': 'Recommender System Statements',
-        'statements': statements
+        'statements': statements,
+        'categories': categories
     }
     return render_template('dash/statements/statements.html', **page_vars)
 
@@ -47,8 +57,15 @@ def new_statement():
     """Render a form allowing the user to add a new statement to the
     document database.
     """
+    category = mongo.db.categories
 
     form = NewStatementForm()
+
+    choices = []
+    for c in category.find():
+        choices.append((str(c['_id']), c['category']))
+
+    form.category.choices = choices
 
     if form.validate_on_submit():
         statement = mongo.db.statements
@@ -74,10 +91,17 @@ def new_statement():
 @register_breadcrumb(dash, 'bc.dash.statements.edit', 'Edit Statement')
 def statement(sid):
     """Render a form to edit an existing statement."""
+    category = mongo.db.categories
     statement = mongo.db.statements
     s = statement.find_one({'_id': ObjectId(sid)})
 
     form = EditStatementForm()
+
+    choices = []
+    for c in category.find():
+        choices.append((str(c['_id']), c['category']))
+
+    form.category.choices = choices
 
     if form.validate_on_submit():
         stat = statement.update(
@@ -94,6 +118,7 @@ def statement(sid):
         return redirect(url_for('dash.statement', sid=sid))
 
     form.statement.data = s['statement']
+    form.category.data = str(s['category'])
 
     page_vars = {
         'title': 'Edit Statement',
@@ -113,6 +138,12 @@ def statement(sid):
 )
 def delete_statement(sid):
     """Remove a statement from the document database."""
+    # Remove all reactions associated with this statement, as they are no
+    # longer valid.
+    reaction = mongo.db.reactions
+    reaction.remove({"statement": ObjectId(sid)})
+
+    # Remove the statement.
     statement = mongo.db.statements
     statement.remove({'_id': ObjectId(sid)}, True)
     flash('Statement successfully deleted.', 'success')
@@ -127,8 +158,14 @@ def delete_statement(sid):
 )
 def purge_statements():
     """Purge all statements from the document database."""
+    # Remove all reactions as they are no longer valid.
+    reaction = mongo.db.reactions
+    reaction.remove({})
+
+    # Remove all statements.
     statement = mongo.db.statements
     statement.remove({})
+
     flash('Statements successfully purged.', 'success')
     return redirect(url_for('dash.statements'))
 
@@ -137,13 +174,16 @@ def purge_statements():
 @admin_required
 def import_statements():
     """Import statements from json file in data folder."""
+    category = mongo.db.categories
     statement = mongo.db.statements
     data_file = '{0}/statements.json'.format(current_app.config['DATA_FILES'])
     with open(data_file, 'r') as fp:
         data = json.load(fp)
         for s in data['statements']:
+            c = category.find_one({"category": s['category']})
             statement.insert({
-                'statement': s['statement']
+                'statement': s['statement'],
+                'category': c['_id']
             })
 
     flash('Statements successfully imported.', 'success')

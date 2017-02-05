@@ -21,6 +21,39 @@
 						"api_v1_0.post_reaction", {"_external": true})
 			}
 		});
+		
+		// Slider.
+		var aSlider = $("#k-ua-slider");
+		aSlider.slider({
+			min: 1,
+			max: 5,
+			value: 3
+		}).slider("pips", {
+			rest: "label",
+			labels: [1, 2, 3, 4, 5]
+		});
+		
+		var submit = $("#k-ua-buttons .answer");
+		submit.on("click", function (e) {
+			data = {
+				profile: FlaskData.pid,
+				statement: FlaskData.statement,
+				reaction: aSlider.slider("option", "value")
+			}
+			
+			postReaction(data);
+		});
+		
+		var skip = $("#k-ua-buttons .skip");
+		skip.on("click", function (e) {
+			data = {
+				profile: FlaskData.pid,
+				statement: FlaskData.statement,
+				reaction: -1
+			}
+			
+			postReaction(data);
+		});
 
 		if (FlaskData.pushed == "True") {
 			getInactionStatement();
@@ -38,13 +71,16 @@
 
 
 	function showInactionStatement (statement) {
-		
+		$("#k-ua-statement").html("")
+		$("#k-ua-statement").html(statement.statement);
+		aSlider.slider("value", 3);
+		FlaskData.statement = statement._id;
 	}// end showInactionStatment.
 
 
-	function postAnswer(answer) {
+	function postReaction(reaction) {
 		oauthClient.fetchToken().done(function (token) {
-			api.postAnswer(token, answer).done(function (data) {
+			api.postReaction(token, reaction).done(function (data) {
 				getInactionStatement();
 			});
 		});

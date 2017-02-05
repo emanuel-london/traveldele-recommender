@@ -19,6 +19,7 @@
     <thead>
         <tr>
             <th>#</th>
+            <th>Category</th>
             <th>Statement</th>
         </tr>
     </thead>
@@ -26,7 +27,8 @@
         {% for s in statements: %}
         <tr>
             <td class="col-md-2">{{ s._id }}</td>
-            <td class="col-md-10"><a href="{{ url_for('dash.statement', sid=s._id) }}">{{ s.statement }}</a></td>
+            <td class="col-md-1">{{ categories[s.category] }}</td>
+            <td class="col-md-9"><a href="{{ url_for('dash.statement', sid=s._id) }}">{{ s.statement }}</a></td>
         </tr>
         {% endfor %}
     </tbody>

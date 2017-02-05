@@ -1,0 +1,18 @@
+{
+	"categories": [{
+		"category": "General",
+		"weight": 0.1
+	},{
+		"category": "Personality",
+		"weight": 0.4
+	},{
+		"category": "Lifestyle",
+		"weight": 0.2
+	},{
+		"category": "Pop Culture",
+		"weight": 0.1
+	},{
+		"category": "Politics",
+		"weight": 0.2
+	}]
+}
