@@ -70,7 +70,8 @@ def new_statement():
     if form.validate_on_submit():
         statement = mongo.db.statements
         sid = statement.insert({
-            'statement': form.statement.data
+            'statement': form.statement.data,
+            'category': ObjectId(form.category.data)
         })
 
         flash(
