@@ -1,0 +1,35 @@
+[uwsgi]
+base = {/path/to/code}
+processes = 4
+threads = 2
+home = %(base)/venv
+chdir = %(base)
+socket = /tmp/kooyara-rs.sock
+chmod-socket = 666
+wsgi-file = %(base)/manage.py
+callable = app
+logto = /var/log/uwsgi/%n.log
+plugin = python35
+uid = {USER}
+gid = {USER}
+
+# Spark environment variables.
+env=PYTHONPATH=$PYTHONPATH:{SPARK_HOME}/python:{SPARK_HOME}/python/lib/{PY4J_ZIP}
+env=PYSPARK_PYTHON=%(base)/venv/bin/python
+
+# Application environment variables.
+env=KOOYARA_ADMIN={ADMIN_USER_EMAIL}
+env=KOOYARA_ADMIN_PASSWORD={ADMIN_USER_PASSWORD}
+env=KOOYARA_CONFIG={DEPLOYMENT_MODE}
+env=KOOYARA_DEV_DATABASE_URL=mysql://{MYSQL_URI}
+env=KOOYARA_MAIL_DEFAULT_SENDER=
+env=KOOYARA_MAIL_PASSWORD=
+env=KOOYARA_MAIL_PORT=465
+env=KOOYARA_MAIL_SERVER=
+env=KOOYARA_MAIL_USERNAME=
+env=KOOYARA_MAIL_USE_SSL=1 
+env=KOOYARA_MAIL_USE_TLS=
+env=KOOYARA_MONGO_DEV_URI=mongodb://{MONGO_URI}
+env=KOOYARA_SECRET_KEY={SECRET_KEY}
+env=KOOYARA_SECURITY_PASSWORD_SALT={PASSWORD_SALT}
+env=WERKZEUG_DEBUG_PIN={on/off}
