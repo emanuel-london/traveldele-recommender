@@ -5,8 +5,8 @@
 	if ($.inArray("bp-dash", bc) > -1 && $.inArray("ep-profile", bc) > -1 ) {
 		// Custom OAuth2 client.
 		var oauthClient = OAuth2Client.init({
-			client_id: "yRqhlcLFiD0n8st",
-			client_secret: "dDOfeqgqdHE7tldCGcfALMuwd67Thf",
+			client_id: FlaskData.oauth_client_id,
+			client_secret: FlaskData.oauth_client_secret,
 			access_token_url: Flask.url_for("oauth.access_token", {"_external": true}),
 			grant_type: "client_credentials"
 		});

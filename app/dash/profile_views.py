@@ -19,7 +19,9 @@ from app.dash.profile_forms import (
     EditProfileForm, NewProfileForm,
 )
 from app.utils.decorators import admin_required
-from app.utils.models import Profile
+from app.utils.models import (
+    OAuth2Client, Profile,
+)
 
 
 @dash.route('/profiles')
@@ -82,6 +84,8 @@ def profile(pid):
 
     form.name.data = profile.name
 
+    oa = OAuth2Client.query.order_by(OAuth2Client.name).first()
+
     page_vars = {
         'title': 'Edit Profile',
         'sidebar_class': ' sidebar two-column' if profile.pushed else '',
@@ -89,7 +93,9 @@ def profile(pid):
         'navwell': True,
         'page_header': 'Edit Profile',
         'form': form,
-        'profile': profile
+        'profile': profile,
+        'oauth_client_id': oa.client_id,
+        'oauth_client_secret': oa.client_secret
     }
     return render_template('dash/profiles/edit-profile.html', **page_vars)
 
