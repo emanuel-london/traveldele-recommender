@@ -38,5 +38,18 @@ var KAPI = (function (self, $) {
 		});
 	};
 	
+	// Get profile matches.
+	self.getMatches = function(token) {
+		return $.ajax({
+			url: self.endpoints.get_matches,
+			method: "GET",
+			headers: {
+				"Authorization": "{0} {1}".format(
+						token.token_type, token.access_token)
+			},
+			dataType: "json"			
+		});
+	};
+	
 	return self;
 }(KAPI || {}, jQuery));

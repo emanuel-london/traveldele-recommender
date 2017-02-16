@@ -18,7 +18,10 @@
 						"api_v1_0.get_inaction_statement",
 						{"_external": true, "_id": FlaskData.pid}),
 				post_reaction: Flask.url_for(
-						"api_v1_0.post_reaction", {"_external": true})
+						"api_v1_0.post_reaction", {"_external": true}),
+				get_matches: Flask.url_for(
+						"api_v1_0.get_matches",
+						{"_external": true, "_id": FlaskData.pid})
 			}
 		});
 		
@@ -57,7 +60,7 @@
 
 		if (FlaskData.pushed == "True") {
 			getInactionStatement();
-		}
+		}		
 	}
 
 
@@ -65,6 +68,7 @@
 		oauthClient.fetchToken().done(function (token) {
 			api.getInactionStatement(token).done(function (data) {
 				showInactionStatement(data.result);
+				getMatches();
 			});
 		});
 	}// end getInactionStatement.
@@ -85,4 +89,22 @@
 			});
 		});
 	}// end postAnswer.
+
+	function getMatches () {
+		oauthClient.fetchToken().done(function (token) {
+			api.getMatches(token).done(function (data) {
+				var table = $("#matches-container table tbody");
+				table.html("");
+				
+				data.result.forEach(function (e, i, a) {
+					var row = $('<tr><td><a href="{0}">{1}</a></td><td>{2}%</td></tr>'.format(
+							Flask.url_for(
+									"dash.profile",
+									{"pid": e.external_id}
+							), e.name, (e.similarity * 100).toFixed(1)));
+					table.append(row);
+				});
+			});
+		});
+	}// end getMatches.
 })(jQuery);

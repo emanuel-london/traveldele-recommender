@@ -23,4 +23,11 @@ class Schemata(object):
         }
     }
 
+    post_cron = {
+        'type': 'object',
+        'properties': {
+            'action': {'type': 'string'}
+        }
+    }
+
 schemata = Schemata()

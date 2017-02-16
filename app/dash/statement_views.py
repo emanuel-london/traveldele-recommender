@@ -107,7 +107,10 @@ def statement(sid):
         stat = statement.update(
             {'_id': ObjectId(sid)},
             {
-                'statement': form.statement.data
+                '$set': {
+                    'statement': form.statement.data,
+                    'category': ObjectId(form.category.data)
+                }
             }
         )
 

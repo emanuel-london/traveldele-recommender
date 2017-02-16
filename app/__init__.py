@@ -47,7 +47,7 @@ oauth_provider = OAuth2Provider()
 sql = SQLAlchemy()
 
 
-def create_app(config_name):
+def create_app(config_name, spark_context):
     """Create the application object.
 
     Blueprints, which are analogous to modules/plugins, are used to add
@@ -96,6 +96,13 @@ def create_app(config_name):
 
     from .oauth import oauth as oauth_blueprint
     app.register_blueprint(oauth_blueprint, url_prefix='/oauth')
+
+    # Initialize spark.
+    from .rs import RecommenderSystem
+    app.rs = RecommenderSystem(spark_context)
+
+    with app.app_context():
+        app.rs.load_data()
 
     # Register assets
     app_js = Bundle(

@@ -7,15 +7,16 @@ import random
 from bson.objectid import ObjectId
 from bson.errors import InvalidId
 from flask import (
-    jsonify, request,
+    current_app, jsonify, request,
 )
 import validictory
 
 from app import (
-    mongo, oauth_provider as op,
+    app, mongo, oauth_provider as op,
 )
 from app.api_v1_0 import api_v1_0
 from app.api_v1_0.schemata import schemata
+from app.utils.decorators import async
 
 
 @api_v1_0.route('/', methods=['GET'])
@@ -27,6 +28,46 @@ def index():
         'status': HTTPStatus.OK,
         'message': 'API version 1.0'
     }), HTTPStatus.OK
+
+
+@api_v1_0.route('/matches/<string:_id>', methods=['GET'])
+@op.require_oauth('api')
+def get_matches(_id):
+    profile = mongo.db.profiles
+
+    try:
+        check = profile.find_one({'_id': ObjectId(_id)})
+        # If the profile was found, return it's matches from spark.
+        if check is not None:
+            matches = current_app.rs.get_matches(ObjectId(_id))
+            output = []
+
+            for match in matches:
+                mp = profile.find_one({"_id": match[0]})
+                output.append({
+                    '_id': str(mp['_id']),
+                    'external_id': mp['external_id'],
+                    'name': mp['name'],
+                    'similarity': round(match[1], 3)
+                })
+
+            return jsonify({
+                'status': HTTPStatus.OK,
+                'result': output
+            }), HTTPStatus.OK
+
+        # Profile was not found. Return error message with 404.
+        return jsonify({
+            'status': HTTPStatus.NOT_FOUND,
+            'message': '{0}.'.format(HTTPStatus.NOT_FOUND.description)
+        }), HTTPStatus.NOT_FOUND
+
+    except InvalidId:
+        # Invalid _id format.
+        return jsonify({
+            'status': HTTPStatus.BAD_REQUEST,
+            'message': '{0}. Invalid _id format.'.format(HTTPStatus.BAD_REQUEST.description)
+        }), HTTPStatus.BAD_REQUEST
 
 
 @api_v1_0.route('/statement', methods=['GET'])
@@ -117,6 +158,16 @@ def post_reaction():
     output = {
         'inserted_id': str(result.inserted_id)
     }
+
+    # Notify spark.
+    @async
+    def update_sims():
+        with app.app_context():
+            up = current_app.rs.add_reaction(result.inserted_id)
+            current_app.rs.update_similarity(filter_by=up)
+
+    update_sims()
+
     return jsonify({
         'status': HTTPStatus.OK,
         'result': output
@@ -325,3 +376,34 @@ def delete_profile(_id):
             'status': HTTPStatus.BAD_REQUEST,
             'message': '{0}. Invalid _id format.'.format(HTTPStatus.BAD_REQUEST.description)
         }), HTTPStatus.BAD_REQUEST
+
+
+@api_v1_0.route('/cron', methods=['POST'])
+@op.require_oauth('admin')
+def post_cron():
+    """Submit a cron job to the api."""
+
+    # Get request data.
+    data = request.get_json()
+    if data is None:
+        return jsonify({
+            'status': HTTPStatus.BAD_REQUEST,
+            'message': '{0}. Only JSON data allowed.'.format(HTTPStatus.BAD_REQUEST.description)
+        }), HTTPStatus.BAD_REQUEST
+
+    # Validate data against the appropriate schema.
+    try:
+        validictory.validate(data, schemata.post_cron)
+    except Exception:
+        # Invalid data.
+        return jsonify({
+            'status': HTTPStatus.BAD_REQUEST,
+            'message': '{0}. Invalid data schema.'.format(HTTPStatus.BAD_REQUEST.description)
+        }), HTTPStatus.BAD_REQUEST
+
+    getattr(current_app.rs, data['action'])()
+
+    return jsonify({
+        'status': HTTPStatus.OK,
+        'message': 'Job submitted.'
+    }), HTTPStatus.OK
