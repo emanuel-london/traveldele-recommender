@@ -30,14 +30,23 @@ from app.utils.models import (
 @register_breadcrumb(dash, 'bc.dash.profiles', 'Test Profiles')
 def profiles():
     """List test profiles"""
-
+    reaction = mongo.db.reactions
     profiles = Profile.query.all()
+
+    counts = {}
+    for p in profiles:
+        if p.pushed:
+            counts[p.id] = reaction.find(
+                {"profile": ObjectId(p.rs_id)}).count()
+        else:
+            counts[p.id] = 'Not pushed.'
 
     page_vars = {
         'title': 'Test Profiles',
         'navwell': True,
         'page_header': 'Test Profiles',
-        'profiles': profiles
+        'profiles': profiles,
+        'reaction_counts': counts
     }
     return render_template('dash/profiles/profiles.html', **page_vars)
 

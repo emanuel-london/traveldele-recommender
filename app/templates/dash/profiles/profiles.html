@@ -15,13 +15,15 @@
         <tr>
             <th>#</th>
             <th>Name</th>
+            <th>Num. Reactions</th>
         </tr>
     </thead>
     <tbody>
         {% for p in profiles: %}
         <tr>
             <td class="col-md-2">{{ p.id }}</td>
-            <td class="col-md-10"><a href="{{ url_for('dash.profile', pid=p.id) }}">{{ p.name }}</a></td>
+            <td class="col-md-3"><a href="{{ url_for('dash.profile', pid=p.id) }}">{{ p.name }}</a></td>
+            <td class="col-md-5">{{ reaction_counts[p.id] }}</td>
         </tr>
         {% endfor %}
     </tbody>
