@@ -121,6 +121,21 @@ class RecommenderSystem(object):
         else:
             self.osm = self.spark_context.parallelize(rows)
 
+    def clear_orphans(self, profile):
+        """Remove orphaned similarities from all matrices."""
+
+        # Statement similarity.
+        self.ssm = self.ssm.filter(
+            lambda row, profile=profile: profile not in row[0])
+
+        # Category similarity.
+        self.csm = self.csm.filter(
+            lambda row, profile=profile: profile not in row[0])
+
+        # Overall similarity.
+        self.osm = self.osm.filter(
+            lambda row, profile=profile: profile not in row[0])
+
     def profiles(self):
         """Get all profiles in the datastore and return them as a list."""
         profile = mongo.db.profiles

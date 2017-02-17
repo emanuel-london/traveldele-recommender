@@ -118,8 +118,25 @@ def profile(pid):
 )
 def delete_profile(pid):
     """Remove a profile from the database."""
-    profile = Profile.query.filter_by(id=pid).first()
-    sql.session.delete(profile)
+    profile = mongo.db.profiles
+    p = Profile.query.filter_by(id=pid).first()
+
+    if p.pushed:
+        # Recommender system cleanup.
+
+        # Delete profile.
+        profile.delete_one({'_id': ObjectId(p.rs_id)})
+
+        # Delete reactions.
+        reaction = mongo.db.reactions
+        reactions = [r['_id']
+                     for r in reaction.find({'profile': ObjectId(p.rs_id)})]
+        reaction.delete_many({'_id': {'$in': reactions}})
+
+        # Remove ophaned similarities
+        current_app.rs.clear_orphans(ObjectId(p.rs_id))
+
+    sql.session.delete(p)
     sql.session.commit()
 
     flash('Profile successfully deleted.', 'success')
@@ -177,6 +194,9 @@ def pull_profile(pid):
     reactions = [r['_id']
                  for r in reaction.find({'profile': ObjectId(p.rs_id)})]
     reaction.delete_many({'_id': {'$in': reactions}})
+
+    # Remove ophaned similarities
+    current_app.rs.clear_orphans(ObjectId(p.rs_id))
 
     # Clear pushed flag on profile.
     p.rs_id = None
