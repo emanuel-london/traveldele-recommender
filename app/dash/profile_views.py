@@ -5,7 +5,8 @@ from bson.objectid import ObjectId
 
 
 from flask import (
-    flash, redirect, render_template, url_for,
+    current_app, flash, redirect, render_template,
+    url_for,
 )
 from flask_breadcrumbs import register_breadcrumb
 
@@ -176,3 +177,18 @@ def pull_profile(pid):
 
     flash('Profile successfully pulled.', 'success')
     return redirect(url_for('dash.profile', pid=pid))
+
+
+@dash.route('/profiles/update-similarity')
+@admin_required
+@confirm_required(
+    'Are you sure you want to run this job? It may take a while depending on the \
+    number of profiles in the database.',
+    'I am sure', 'dash.profiles', [], 'danger'
+)
+def update_similarity():
+    """Initialize the task of updating the category and overall similarity
+    RDDs."""
+    current_app.rs.update_similarity()
+    flash('Job initiated. Similarity matrices will be updated.', 'success')
+    return redirect(url_for('dash.profiles'))
