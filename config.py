@@ -46,6 +46,9 @@ class Config(object):
     # OAuth2
     OAUTH2_PROVIDER_TOKEN_EXPIRES_IN = 60 * 5
 
+    # Recommender system backend.
+    RS_BACKEND = os.environ.get('{0}_RS_BACKEND'.format(APP_PREFIX)) or 'mongo'
+
     @staticmethod
     def init_app(app):
         """Configuration specific initialization."""

@@ -97,20 +97,16 @@ def get_inaction_statement(_id):
         statement = mongo.db.statements
         inaction = statement.find({'_id': {'$nin': reacted}})
 
-        if inaction is None:
-            # No inaction statements found.
-            return jsonify({
-                'status': HTTPStatus.NOT_FOUND,
-                'message': '{0}.'.format(HTTPStatus.NOT_FOUND.description)
-            }), HTTPStatus.NOT_FOUND
-
         # Select one statement at random.
-        ret = random.choice(list(inaction))
+        if inaction.count() > 0:
+            ret = random.choice(list(inaction))
 
-        output = {
-            '_id': str(ret['_id']),
-            'statement': ret['statement']
-        }
+            output = {
+                '_id': str(ret['_id']),
+                'statement': ret['statement']
+            }
+        else:
+            output = {}
 
         return jsonify({
             'status': HTTPStatus.OK,

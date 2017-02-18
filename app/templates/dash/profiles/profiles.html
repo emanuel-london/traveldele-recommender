@@ -2,7 +2,8 @@
 
 {% block page_actions %}
 {{ super() }}
-<a href="{{ url_for('dash.update_similarity') }}" class="btn btn-danger">Update Similarity</a>
+<a href="{{ url_for('dash.update_similarity') }}" class="btn btn-warning">Update Similarity</a>
+<a href="{{ url_for('dash.purge_similarity') }}" class="btn btn-danger">Purge Similarity</a>
 <a href="{{ url_for('dash.new_profile') }}" class="btn btn-default">New Profile</a>
 {% endblock page_actions %}
 

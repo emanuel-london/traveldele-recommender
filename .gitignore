@@ -85,3 +85,5 @@ app/files/*
 # Never ignore .gitkeep files.
 !.gitkeep
 
+# Spark
+metastore_db

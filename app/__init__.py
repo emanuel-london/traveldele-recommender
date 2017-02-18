@@ -24,6 +24,7 @@ from flask_mail import Mail
 from flask_oauthlib.provider import OAuth2Provider
 from flask_pymongo import PyMongo
 from flask_sqlalchemy import SQLAlchemy
+from pyspark import SparkContext, SparkConf
 from werkzeug.contrib.cache import MemcachedCache
 
 
@@ -47,7 +48,7 @@ oauth_provider = OAuth2Provider()
 sql = SQLAlchemy()
 
 
-def create_app(config_name, spark_context):
+def create_app(config_name):
     """Create the application object.
 
     Blueprints, which are analogous to modules/plugins, are used to add
@@ -98,11 +99,15 @@ def create_app(config_name, spark_context):
     app.register_blueprint(oauth_blueprint, url_prefix='/oauth')
 
     # Initialize spark.
-    from .rs import RecommenderSystem
-    app.rs = RecommenderSystem(spark_context)
-
     with app.app_context():
-        app.rs.load_data()
+        if app.config['RS_BACKEND'] == 'mongo':
+            from .rs.mongo import MongoRecommenderSystem
+            app.rs = MongoRecommenderSystem()
+        elif app.config['RS_BACKEND'] == 'spark':
+            from .rs.spark import SparkRecommenderSystem
+            app.rs = SparkRecommenderSystem(
+                SparkContext(conf=SparkConf().setAppName("krs")))
+            app.rs.load_data()
 
     # Register assets
     app_js = Bundle(
