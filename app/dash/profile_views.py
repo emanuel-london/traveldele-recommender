@@ -221,3 +221,17 @@ def update_similarity():
     current_app.rs.update_similarity()
     flash('Job initiated. Similarity matrices will be updated.', 'success')
     return redirect(url_for('dash.profiles'))
+
+
+@dash.route('/profiles/purge-similarity')
+@admin_required
+@confirm_required(
+    'Are you sure you want to run this job? It removes all existing similarities.',
+    'I am sure', 'dash.profiles', [], 'danger'
+)
+def purge_similarity():
+    """Initialize the task of updating the category and overall similarity
+    RDDs."""
+    current_app.rs.purge_similarity()
+    flash('Job initiated. Similarity matrices will be purged.', 'success')
+    return redirect(url_for('dash.profiles'))

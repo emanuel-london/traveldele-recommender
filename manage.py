@@ -9,7 +9,6 @@ from flask_migrate import (
     Migrate, MigrateCommand,
 )
 from flask_script import Manager
-from pyspark import SparkContext, SparkConf
 
 
 from app import (
@@ -23,9 +22,7 @@ import app.utils.context  # @UnusedImport Inject global template variables.
 
 
 app = create_app(
-    os.environ.get('{0}_CONFIG'.format(get_app_prefix()), 'default'),
-    SparkContext(conf=SparkConf().setAppName("krs"))
-)
+    os.environ.get('{0}_CONFIG'.format(get_app_prefix()), 'default'))
 manager = Manager(app)
 manager.add_command('create-admin', CreateAdminCommand)
 manager.add_command('db', MigrateCommand)
