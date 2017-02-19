@@ -39,6 +39,8 @@ class MongoRecommenderSystem(object):
         """Update category and overall similarity matrices."""
         if mongo.db.smrows.count() == 0:
             self.build_statement_similarity()
+            if mongo.db.smrows.count() == 0:
+                return
 
         # Update category similarity.
         rows = []
@@ -119,6 +121,10 @@ class MongoRecommenderSystem(object):
             return
 
         dst = self.distinct_reaction_statements()
+
+        if len(dst) == 0:
+            return
+
         rows = []
         for s in dst:
             rows = rows + self.statement_rows(s)
