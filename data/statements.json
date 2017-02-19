@@ -1,6 +1,6 @@
 {
 	"statements": [{
-		"statement": "I think the holcaust has been exaggerated",
+		"statement": "I think the holocaust has been exaggerated",
 		"category": "General"
 	}, {
 		"statement": "I am a feminist",
@@ -74,13 +74,7 @@
 	}, {
 		"statement": "I like the idea of genetically engineered foods",
 		"category": "General"
-	}, {
-		"statement": "I am vegan",
-		"category": "General"
-	}, {
-		"statement": "I am vegetarian",
-		"category": "General"
-	}, {
+	},{
 		"statement": "Vegetarianism is stupid",
 		"category": "General"
 	}, {

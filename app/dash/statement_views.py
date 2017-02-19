@@ -190,10 +190,13 @@ def import_statements():
         data = json.load(fp)
         for s in data['statements']:
             c = category.find_one({"category": s['category']})
-            statement.insert({
+            stat = {
                 'statement': s['statement'],
                 'category': c['_id']
-            })
+            }
+            if 'tags' in s:
+                stat['tags'] = [x.strip() for x in s['tags'].split(',')]
+            statement.insert(stat)
 
     flash('Statements successfully imported.', 'success')
     return redirect(url_for('dash.statements'))
