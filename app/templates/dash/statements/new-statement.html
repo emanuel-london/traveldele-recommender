@@ -20,8 +20,18 @@
                         {% if form.category.errors %} has-error{% endif %}
                         {% if form.category.flags.required %} required{% endif %}">
             {{ form.category.label(class_='control-label') }}
-            {{ form.category(class_='form-control', rows=5) }}
+            {{ form.category(class_='form-control') }}
             {% for message in form.category.errors %}
+            <p class="help-block">{{ message }}</p>
+            {% endfor %}
+        </div>
+
+        <div class="form-group
+                        {% if form.tags.errors %} has-error{% endif %}
+                        {% if form.tags.flags.required %} required{% endif %}">
+            {{ form.tags.label(class_='control-label') }}
+            {{ form.tags(class_='form-control') }}
+            {% for message in form.tags.errors %}
             <p class="help-block">{{ message }}</p>
             {% endfor %}
         </div>

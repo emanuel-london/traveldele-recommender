@@ -71,7 +71,8 @@ def new_statement():
         statement = mongo.db.statements
         sid = statement.insert({
             'statement': form.statement.data,
-            'category': ObjectId(form.category.data)
+            'category': ObjectId(form.category.data),
+            'tags': [x.strip() for x in form.tags.data.split(',')]
         })
 
         flash(
@@ -110,7 +111,8 @@ def statement(sid):
             {
                 '$set': {
                     'statement': form.statement.data,
-                    'category': ObjectId(form.category.data)
+                    'category': ObjectId(form.category.data),
+                    'tags': [x.strip() for x in form.tags.data.split(',')]
                 }
             }
         )
@@ -123,6 +125,9 @@ def statement(sid):
 
     form.statement.data = s['statement']
     form.category.data = str(s['category'])
+
+    if 'tags' in s:
+        form.tags.data = ', '.join(s['tags'])
 
     page_vars = {
         'title': 'Edit Statement',
@@ -185,10 +190,13 @@ def import_statements():
         data = json.load(fp)
         for s in data['statements']:
             c = category.find_one({"category": s['category']})
-            statement.insert({
+            stat = {
                 'statement': s['statement'],
                 'category': c['_id']
-            })
+            }
+            if 'tags' in s:
+                stat['tags'] = [x.strip() for x in s['tags'].split(',')]
+            statement.insert(stat)
 
     flash('Statements successfully imported.', 'success')
     return redirect(url_for('dash.statements'))
