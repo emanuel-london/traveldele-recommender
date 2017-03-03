@@ -2,6 +2,15 @@
 
 
 class Schemata(object):
+
+    get_matches = {
+        'type': 'object',
+        'properties': {
+            'sort_similarity': {'type': 'integer', 'required': False},
+            'limit': {'type': 'integer', 'required': False}
+        }
+    }
+
     post_profile = {
         'type': 'object',
         'properties': {
@@ -20,6 +29,17 @@ class Schemata(object):
             'profile': {'type': 'string'},
             'statement': {'type': 'string'},
             'reaction': {'type': 'integer'}
+        }
+    }
+
+    get_inaction = {
+        'type': 'object',
+        'properties': {
+            'tags': {
+                'type': 'array',
+                'minItems': 1,
+                'items': {'type': 'string'}
+            }
         }
     }
 
