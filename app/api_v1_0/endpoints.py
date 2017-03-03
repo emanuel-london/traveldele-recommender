@@ -30,26 +30,63 @@ def index():
     }), HTTPStatus.OK
 
 
-@api_v1_0.route('/matches/<string:_id>', methods=['GET'])
+@api_v1_0.route('/matches/<string:_id>', methods=['GET', 'POST'])
 @op.require_oauth('api')
 def get_matches(_id):
     profile = mongo.db.profiles
 
     try:
         check = profile.find_one({'_id': ObjectId(_id)})
-        # If the profile was found, return it's matches from spark.
+        # If the profile was found, return it's matches.
         if check is not None:
-            matches = current_app.rs.get_matches(ObjectId(_id))
             output = []
 
-            for match in matches:
-                mp = profile.find_one({"_id": match[0]})
-                output.append({
-                    '_id': str(mp['_id']),
-                    'external_id': mp['external_id'],
-                    'name': mp['name'],
-                    'similarity': round(match[1], 3)
-                })
+            if request.method == 'GET':
+                matches = current_app.rs.get_matches(ObjectId(_id))
+                for match in matches:
+                    mp = profile.find_one({"_id": match[0]})
+                    output.append({
+                        '_id': str(mp['_id']),
+                        'external_id': mp['external_id'],
+                        'name': mp['name'],
+                        'similarity': round(match[1], 3)
+                    })
+            else:
+                # Get request data.
+                data = request.get_json()
+                if data is None:
+                    return jsonify({
+                        'status': HTTPStatus.BAD_REQUEST,
+                        'message': '{0}. Only JSON data allowed.'.format(HTTPStatus.BAD_REQUEST.description)
+                    }), HTTPStatus.BAD_REQUEST
+
+                # Validate data against the appropriate schema.
+                try:
+                    validictory.validate(data, schemata.get_matches)
+                except Exception:
+                    # Invalid data.
+                    return jsonify({
+                        'status': HTTPStatus.BAD_REQUEST,
+                        'message': '{0}. Invalid data schema.'.format(HTTPStatus.BAD_REQUEST.description)
+                    }), HTTPStatus.BAD_REQUEST
+
+                if 'sort_similarity' in data:
+                    matches = current_app.rs.get_matches(
+                        ObjectId(_id), sort_sim=data['sort_similarity'])
+                else:
+                    matches = current_app.rs.get_matches(ObjectId(_id))
+
+                for match in matches:
+                    mp = profile.find_one({"_id": match[0]})
+                    output.append({
+                        '_id': str(mp['_id']),
+                        'external_id': mp['external_id'],
+                        'name': mp['name'],
+                        'similarity': round(match[1], 3)
+                    })
+                    if 'limit' in data:
+                        if len(output) >= data['limit']:
+                            break
 
             return jsonify({
                 'status': HTTPStatus.OK,
@@ -85,7 +122,7 @@ def statements():
     }), HTTPStatus.OK
 
 
-@api_v1_0.route('/statement/inaction/<string:_id>', methods=['GET'])
+@api_v1_0.route('/statement/inaction/<string:_id>', methods=['GET', 'POST'])
 @op.require_oauth('api')
 def get_inaction_statement(_id):
     """Randomly select a statement with no reaction and return it."""
@@ -95,7 +132,29 @@ def get_inaction_statement(_id):
                    for a in reaction.find({'profile': ObjectId(_id)})]
 
         statement = mongo.db.statements
-        inaction = statement.find({'_id': {'$nin': reacted}})
+        inaction = []
+        if request.method == 'GET':
+            inaction = statement.find({'_id': {'$nin': reacted}})
+        else:
+            # Get request data.
+            data = request.get_json()
+            if data is None:
+                return jsonify({
+                    'status': HTTPStatus.BAD_REQUEST,
+                    'message': '{0}. Only JSON data allowed.'.format(HTTPStatus.BAD_REQUEST.description)
+                }), HTTPStatus.BAD_REQUEST
+
+            # Validate data against the appropriate schema.
+            try:
+                validictory.validate(data, schemata.get_inaction)
+            except Exception:
+                # Invalid data.
+                return jsonify({
+                    'status': HTTPStatus.BAD_REQUEST,
+                    'message': '{0}. Invalid data schema.'.format(HTTPStatus.BAD_REQUEST.description)
+                }), HTTPStatus.BAD_REQUEST
+            inaction = statement.find(
+                {'$and': [{'_id': {'$nin': reacted}}, {'tags': {'$all': data['tags']}}]})
 
         # Select one statement at random.
         if inaction.count() > 0:
@@ -155,7 +214,7 @@ def post_reaction():
         'inserted_id': str(result.inserted_id)
     }
 
-    # Notify spark.
+    # Notify recommender system.
     @async
     def update_sims():
         with app.app_context():
@@ -168,6 +227,43 @@ def post_reaction():
         'status': HTTPStatus.OK,
         'result': output
     }), HTTPStatus.OK
+
+
+@api_v1_0.route('/reaction/<string:_id>', methods=['GET'])
+@op.require_oauth('api')
+def get_reactions(_id):
+    profile = mongo.db.profiles
+
+    try:
+        check = profile.find_one({'_id': ObjectId(_id)})
+        # If the profile was found, return it's matches.
+        if check is not None:
+            output = []
+            reactions = mongo.db.reactions.find({'profile': ObjectId(_id)})
+
+            for reaction in reactions:
+                output.append({
+                    'statement': str(reaction['statement']),
+                    'reaction': reaction['reaction']
+                })
+
+            return jsonify({
+                'status': HTTPStatus.OK,
+                'result': output
+            }), HTTPStatus.OK
+
+        # Profile was not found. Return error message with 404.
+        return jsonify({
+            'status': HTTPStatus.NOT_FOUND,
+            'message': '{0}.'.format(HTTPStatus.NOT_FOUND.description)
+        }), HTTPStatus.NOT_FOUND
+
+    except InvalidId:
+        # Invalid _id format.
+        return jsonify({
+            'status': HTTPStatus.BAD_REQUEST,
+            'message': '{0}. Invalid _id format.'.format(HTTPStatus.BAD_REQUEST.description)
+        }), HTTPStatus.BAD_REQUEST
 
 
 @api_v1_0.route('/profile', methods=['GET'])
