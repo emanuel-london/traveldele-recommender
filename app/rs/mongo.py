@@ -9,21 +9,27 @@ import numpy as np
 
 
 class MongoRecommenderSystem(object):
-    """Spark based recommender system."""
+    """MongoDB based recommender system."""
 
     def __init__(self):
         """"""
         self.build_statement_similarity()
         self.update_similarity()
 
-    def get_matches(self, pid):
+    def get_matches(self, pid, sort_sim=None):
         """Get and return all matches for the given profile."""
         matches = []
-        for sim in mongo.db.omrows.find({'pair': pid}):
+
+        found = mongo.db.omrows.find({'pair': pid})
+        if sort_sim is not None:
+            found = mongo.db.omrows.find(
+                {'pair': pid}).sort('similarity', sort_sim)
+
+        for sim in found:
             matches.append(
                 (list(set(list(sim['pair'])) - set([pid]))[0], sim['similarity']))
 
-        return sorted(matches, key=lambda x: x[1], reverse=True)
+        return matches
 
     def add_reaction(self, rid):
         """Add a new reaction to the statement similarity matrix.
