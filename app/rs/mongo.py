@@ -37,7 +37,9 @@ class MongoRecommenderSystem(object):
         """
         r = mongo.db.reactions.find_one({"_id": rid})
         rows = self.statement_rows(r['statement'], filter_by=r['profile'])
-        mongo.db.smrows.insert_many(rows)
+
+        if rows != []:
+            mongo.db.smrows.insert_many(rows)
 
         return r['profile']
 
@@ -84,7 +86,8 @@ class MongoRecommenderSystem(object):
         else:
             mongo.db.cmrows.remove({})
 
-        mongo.db.cmrows.insert_many(rows)
+        if rows != []:
+            mongo.db.cmrows.insert_many(rows)
 
         # Update overall similarity.
         # Get unique profiles from category similarity matrix to generate
@@ -119,7 +122,8 @@ class MongoRecommenderSystem(object):
         else:
             mongo.db.omrows.remove({})
 
-        mongo.db.omrows.insert_many(rows)
+        if rows != []:
+            mongo.db.omrows.insert_many(rows)
 
     def build_statement_similarity(self):
         """Build the statement similarity matrix."""
@@ -136,7 +140,8 @@ class MongoRecommenderSystem(object):
             rows = rows + self.statement_rows(s)
 
         mongo.db.smrows.remove({})
-        mongo.db.smrows.insert_many(rows)
+        if rows != []:
+            mongo.db.smrows.insert_many(rows)
 
     def purge_similarity(self):
         """Purge all similarity matrices."""

@@ -32,6 +32,11 @@ class Schemata(object):
         }
     }
 
+    put_reaction = {
+        'type': 'object',
+        'properties': {}
+    }
+
     get_inaction = {
         'type': 'object',
         'properties': {
