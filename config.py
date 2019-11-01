@@ -8,7 +8,7 @@ import os
 
 
 BASEDIR = os.path.abspath(os.path.dirname(__file__))
-APP_PREFIX = 'KOOYARA'
+APP_PREFIX = 'TRAVELDELE'
 
 
 class Config(object):
@@ -32,7 +32,7 @@ class Config(object):
     _ADMIN_PASSWORD = os.environ.get('{0}_ADMIN_PASSWORD'.format(APP_PREFIX))
 
     # Site name for navbar.
-    SITE_NAME = 'Kooyara'
+    SITE_NAME = 'Traveldele'
 
     # Organisation name for copyright notice.
     ORG_NAME = 'Kooyara Inc'
